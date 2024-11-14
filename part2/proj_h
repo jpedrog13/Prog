@@ -1,0 +1,153 @@
+#ifndef proj_h
+#define proj_h
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <SDL.h>
+#include <SDL2_gfxPrimitives.h>
+#include <math.h>
+
+#define DIMn 20
+#define NL 200
+#define DIMv 50
+#define pi 3.14
+
+/*--------------------------------------------
+|guarda as informacoes de um ponto:
+|nome, raio, posicao, tipo, cor;
+|-------------------------------------------*/
+
+typedef struct ponto{
+	char iponto[5];
+	int x, y, nentrada, nsaida;
+	char corponto[10];
+	char tipo[4];
+	float raioponto;
+}PONTO;
+
+/*--------------------------------------------
+|guarda apontador para incio da linha, proximo
+|elemento e informação do ponto;
+|-------------------------------------------*/
+
+typedef struct linha{
+	PONTO p;
+	struct linha *prox;
+	struct linha *inicio;
+}LINHA;
+
+/*--------------------------------------------
+|guarda apontador para incio da lista de linhas,
+|proximo elemento e informação da linha;
+|-------------------------------------------*/
+
+typedef struct ll{
+	LINHA l;
+	char nome[4];
+	struct ll *prox;
+}LL;
+
+/*--------------------------------------------
+|guarda nome dos pontos a ligar e das linhas
+|onde estao inseridos;
+|-------------------------------------------*/
+
+typedef struct ligar{
+	char l1[4], l2[4], p1[5], p2[5];	
+}LIGAR;
+
+/*--------------------------------------------
+|guarda apontador proximo elemento da lista
+|e informação da ligacao;
+|-------------------------------------------*/
+
+typedef struct lg{
+	LIGAR lig;
+	struct lg *prox;
+}LG;
+
+/*--------------------------------------------
+|guarda as informacoes de um comboio:
+|nome, raio, cor, ponto onde inicia marcha,
+|numero de viagens, cor das carruagens;
+|-------------------------------------------*/
+
+typedef struct comboio{
+	char icomboio[3];
+	int raiocomboio;
+	char corcarruagem[10];
+    char iferrovia[5];
+    char iponto[5];
+    int numviagens;
+    int c1, c2, c3;
+}COMBOIO;
+
+/*--------------------------------------------
+|guarda apontador para proximo elemento,
+|informação do comboio, e auxiliares para a
+|movimentacao ou reset do comboio;
+|-------------------------------------------*/
+
+typedef struct lc{
+	int c1, c2, c3, auxv;
+	float x, y, auxx, auxy;
+	char nomep[5], nomef[4];
+	COMBOIO c;
+	struct lc *prox;
+}LC;
+
+/*--------------------------------------------
+|guarda nome e informação das cores;
+|-------------------------------------------*/
+
+typedef struct{	
+	int r;
+	int g;
+	int b;
+	char nome[10];
+}COR;
+
+int leficheiro(char nome[], int d[2], LC **icomb, LL **ilinha, LG **iligar);
+
+void insere_comboio(COMBOIO novo, LC **inicio, LC **atual);
+
+int mostra_comboio(LC *icomb);
+
+LC *elimina_comboio(LC *icomb, int *x, int i);
+
+void insere_pontos(PONTO novo, LINHA **inicio, LINHA **atual);
+
+void insere_linha(LINHA *novo, char nome[], LL **inicio, LL **atual);
+
+int mostra_linha(LL *ilinha);
+
+LL *elimina_linha(LL *ilinha, int *x, int i);
+
+LC *cria_comboio(LC *inicio, LL *ilinha);
+
+void insere_ligar(LIGAR novo, LG **inicio, LG **atual);
+
+void grafico(int d[],LL *ilinha, LG *iligar, LC *icomb);
+
+int cria_janela(int d[],LL *ilinha, LG *iligar, LC *icomb, int r);
+
+void graf_insere_linhas(LL *ilinha, COR cores[]);
+
+void liga_linhas(LL *ilinha, LG *iligar);
+
+void graf_insere_comboio(LL *ilinha, LC *icomb, COR cores[], int r);
+
+void iniciacomboio(LL *ilinha, LC **icomb);
+
+float desenha(LINHA *aux, LC *aux1, COR cores[]);
+
+int menu_iterativo(int d[], SDL_Rect r1, SDL_Rect r2, SDL_Rect r3);
+
+int menu_pausa(int d[], LC *icomb, LL *ilinha, LG *iligar, COR cores[]);
+
+void menu(int d[], LC *icomb, LL *ilinha, LG *iligar, int i);
+
+void reinicia(LC *aux1);
+
+#endif
